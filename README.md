@@ -9,6 +9,9 @@
 - [Functions in Dart](#4-functions-in-dart)
 - [Operators in Dart](#5-operators-in-dart)
 - [Control Flow Statements in Dart](#6-control-flow-statements-in-dart)
+- [File Handling in Dart](#7-file-handling-in-dart)
+- [OOP in Dart](#8-oop-in-dart)
+- [Dart Null Safety](#9-dart-null-safety)
 
 ---
 
@@ -1262,85 +1265,28 @@ Fruit 2: Banana
 Fruit 3: Cherry
 ```
 
-#### Example 7: For-In Loop
+---
 
-```dart
-void main() {
-  List<String> colors = ['Red', 'Green', 'Blue'];
-  for (var color in colors) {
-    print(color);
-  }
-}
-```
+## 7. File Handling in Dart
 
-**Output:**
+Dart provides a robust file system API for reading and writing files.
 
-```
-Red
-Green
-Blue
-```
-
-#### Example 8: While Loop for Countdown
-
-```dart
-void main() {
-  int countdown = 3;
-  while (countdown > 0) {
-    print('Countdown: $countdown');
-    countdown--;
-  }
-  print('Blast off!');
-}
-```
-
-**Output:**
-
-```
-Countdown: 3
-Countdown: 2
-Countdown: 1
-Blast off!
-```
-
-#### Example 9: Do-While Loop for User Input Simulation
+### Example 1: Reading a File
 
 ```dart
 import 'dart:io';
 
-void main() {
-  String command;
-  do {
-    stdout.write('Enter command (type \'exit\' to quit): ');
-    command = stdin.readLineSync() ?? '';
-    print('You entered: $command');
-  } while (command != 'exit');
-  print('Exiting program.');
-}
-```
-
-**Output (User input is simulated):**
-
-```
-Enter command (type 'exit' to quit): hello
-You entered: hello
-Enter command (type 'exit' to quit): exit
-You entered: exit
-Exiting program.
-```
-
-#### Example 10: Break and Continue in Loops
-
-```dart
-void main() {
-  for (int i = 0; i < 10; i++) {
-    if (i == 3) {
-      continue; // Skip 3
+void main() async {
+  try {
+    File file = File('example.txt');
+    if (await file.exists()) {
+      String content = await file.readAsString();
+      print('File content: $content');
+    } else {
+      print('File not found.');
     }
-    if (i == 7) {
-      break; // Exit loop at 7
-    }
-    print('Number: $i');
+  } catch (e) {
+    print('Error reading file: $e');
   }
 }
 ```
@@ -1348,25 +1294,535 @@ void main() {
 **Output:**
 
 ```
-Number: 0
-Number: 1
-Number: 2
-Number: 4
-Number: 5
-Number: 6
+File content: Hello, Dart!
 ```
 
-### Example 1: If-Else Statement
+### Example 2: Writing to a File
+
+```dart
+import 'dart:io';
+
+void main() async {
+  try {
+    File file = File('example.txt');
+    await file.writeAsString('Hello, Dart!');
+    print('File written successfully.');
+  } catch (e) {
+    print('Error writing file: $e');
+  }
+}
+```
+
+**Output:**
+
+```
+File written successfully.
+```
+
+### Example 3: Appending to a File
+
+```dart
+import 'dart:io';
+
+void main() async {
+  try {
+    File file = File('example.txt');
+    await file.writeAsString(' Appended text.', mode: FileMode.append);
+    print('Text appended successfully.');
+  } catch (e) {
+    print('Error appending to file: $e');
+  }
+}
+```
+
+**Output:**
+
+```
+Text appended successfully.
+```
+
+### Example 4: Creating a Directory
+
+```dart
+import 'dart:io';
+
+void main() async {
+  try {
+    Directory dir = Directory('my_directory');
+    if (!await dir.exists()) {
+      await dir.create();
+      print('Directory created successfully.');
+    } else {
+      print('Directory already exists.');
+    }
+  } catch (e) {
+    print('Error creating directory: $e');
+  }
+}
+```
+
+**Output:**
+
+```
+Directory created successfully.
+```
+
+### Example 5: Listing Files in a Directory
+
+```dart
+import 'dart:io';
+
+void main() async {
+  try {
+    Directory dir = Directory('my_directory');
+    if (await dir.exists()) {
+      List<FileSystemEntity> entities = dir.listSync();
+      print('Files in directory:');
+      for (var entity in entities) {
+        print(entity.path);
+      }
+    } else {
+      print('Directory not found.');
+    }
+  } catch (e) {
+    print('Error listing directory: $e');
+  }
+}
+```
+
+**Output:**
+
+```
+Files in directory:
+my_directory\example.txt
+```
+
+---
+
+## 8. OOP in Dart
+
+Overview
+
+Object-Oriented Programming (OOP) in Dart is built around classes and objects. Dart supports all major OOP concepts including encapsulation, inheritance, polymorphism, and abstraction.
+
+Key Concepts:-
+Class: Blueprint for creating objects
+Object: Instance of a class
+Constructor: Special method for initializing objects
+Inheritance: Creating new classes based on existing ones
+Polymorphism: Same interface, different implementations
+Encapsulation: Hiding internal implementation details
+Abstract Classes: Classes that cannot be instantiated
+Interfaces: Contracts that classes must implement
+
+### Example 1: Class and Object
+
+```dart
+class Car {
+  String brand;
+  String model;
+
+  Car(this.brand, this.model); // Constructor
+
+  void displayInfo() {
+    print('Car: $brand $model');
+  }
+}
+
+void main() {
+  var myCar = Car('Toyota', 'Camry'); // Creating an object
+  myCar.displayInfo();
+}
+```
+
+**Output:**
+
+```
+Car: Toyota Camry
+```
+
+### Example 2: Inheritance
+
+```dart
+class Vehicle {
+  String brand;
+  Vehicle(this.brand);
+
+  void accelerate() {
+    print('$brand is accelerating.');
+  }
+}
+
+class Car extends Vehicle {
+  String model;
+  Car(String brand, this.model) : super(brand);
+
+  void display() {
+    print('Car: $brand $model');
+  }
+}
+
+void main() {
+  var myCar = Car('Honda', 'Civic');
+  myCar.display();
+  myCar.accelerate();
+}
+```
+
+**Output:**
+
+```
+Car: Honda Civic
+Honda is accelerating.
+```
+
+### Example 3: Encapsulation (Getters and Setters)
+
+```dart
+class BankAccount {
+  double _balance; // Private variable
+
+  BankAccount(this._balance);
+
+  double get balance => _balance; // Getter
+
+  set deposit(double amount) {
+    if (amount > 0) {
+      _balance += amount;
+    }
+  }
+
+  set withdraw(double amount) {
+    if (amount > 0 && _balance >= amount) {
+      _balance -= amount;
+    } else {
+      print('Insufficient balance or invalid amount.');
+    }
+  }
+}
+
+void main() {
+  var account = BankAccount(1000);
+  print('Initial Balance: ${account.balance}');
+  account.deposit = 500;
+  print('Balance after deposit: ${account.balance}');
+  account.withdraw = 200;
+  print('Balance after withdrawal: ${account.balance}');
+  account.withdraw = 1500; // This will fail
+}
+```
+
+**Output:**
+
+```
+Initial Balance: 1000.0
+Balance after deposit: 1500.0
+Balance after withdrawal: 1300.0
+Insufficient balance or invalid amount.
+```
+
+### Example 4: Polymorphism (Method Overriding)
+
+```dart
+class Shape {
+  void draw() {
+    print('Drawing a shape.');
+  }
+}
+
+class Circle extends Shape {
+  @override
+  void draw() {
+    print('Drawing a circle.');
+  }
+}
+
+class Square extends Shape {
+  @override
+  void draw() {
+    print('Drawing a square.');
+  }
+}
+
+void main() {
+  Shape s1 = Circle();
+  Shape s2 = Square();
+
+  s1.draw(); // Calls Circle's draw method
+  s2.draw(); // Calls Square's draw method
+}
+```
+
+**Output:**
+
+```
+Drawing a circle.
+Drawing a square.
+```
+
+### Example 5: Abstract Classes
+
+```dart
+abstract class Animal {
+  String name;
+  Animal(this.name);
+
+  void eat(); // Abstract method
+
+  void sleep() {
+    print('$name is sleeping.');
+  }
+}
+
+class Dog extends Animal {
+  Dog(String name) : super(name);
+
+  @override
+  void eat() {
+    print('$name is eating bones.');
+  }
+}
+
+void main() {
+  var myDog = Dog('Buddy');
+  myDog.eat();
+  myDog.sleep();
+}
+```
+
+**Output:**
+
+```
+Buddy is eating bones.
+Buddy is sleeping.
+```
+
+### Example 6: Interfaces (Implicit Interfaces)
+
+```dart
+class Greeter {
+  void sayHello(String name) {
+    print('Hello, $name!');
+  }
+}
+
+class LoudGreeter implements Greeter {
+  @override
+  void sayHello(String name) {
+    print('HELLO, $name!!!');
+  }
+}
+
+void main() {
+  Greeter normalGreeter = Greeter();
+  Greeter loudGreeter = LoudGreeter();
+
+  normalGreeter.sayHello('Alice');
+  loudGreeter.sayHello('Bob');
+}
+```
+
+**Output:**
+
+```
+Hello, Alice!
+HELLO, Bob!!!
+```
+
+### Example 7: Mixins
+
+```dart
+mixin Walkable {
+  void walk() {
+    print('I can walk.');
+  }
+}
+
+mixin Swimmable {
+  void swim() {
+    print('I can swim.');
+  }
+}
+
+class Human with Walkable, Swimmable {
+  String name;
+  Human(this.name);
+
+  void greet() {
+    print('Hi, my name is $name.');
+  }
+}
+
+void main() {
+  var person = Human('Alice');
+  person.greet();
+  person.walk();
+  person.swim();
+}
+```
+
+**Output:**
+
+```
+Hi, my name is Alice.
+I can walk.
+I can swim.
+```
+
+### Example 8: Factory Constructors
+
+```dart
+class Logger {
+  static final Map<String, Logger> _cache = <String, Logger>{};
+
+  final String name;
+
+  factory Logger(String name) {
+    if (_cache.containsKey(name)) {
+      return _cache[name]!;
+    } else {
+      final logger = Logger._internal(name);
+      _cache[name] = logger;
+      return logger;
+    }
+  }
+
+  Logger._internal(this.name); // Private constructor
+
+  void log(String message) {
+    print('[$name] $message');
+  }
+}
+
+void main() {
+  var logger1 = Logger('AppLogger');
+  logger1.log('First message.');
+
+  var logger2 = Logger('AppLogger'); // Returns existing instance
+  logger2.log('Second message.');
+
+  print(identical(logger1, logger2)); // true
+}
+```
+
+**Output:**
+
+```
+[AppLogger] First message.
+[AppLogger] Second message.
+true
+```
+
+### Example 9: Static Members
+
+```dart
+class MathOperations {
+  static const double PI = 3.14159;
+
+  static double circleArea(double radius) {
+    return PI * radius * radius;
+  }
+}
+
+void main() {
+  print('Area of circle with radius 5: ${MathOperations.circleArea(5)}');
+  print('Value of PI: ${MathOperations.PI}');
+}
+```
+
+**Output:**
+
+```
+Area of circle with radius 5: 78.53975
+Value of PI: 3.14159
+```
+
+### Example 10: Extension Methods (for existing classes)
+
+```dart
+extension StringOperations on String {
+  String reverse() {
+    return split('').reversed.join();
+  }
+
+  String truncate(int length) {
+    if (this.length <= length) return this;
+    return '${substring(0, length)}...';
+  }
+}
+
+void main() {
+  String message = 'Hello Dart';
+  print('Reversed: ${message.reverse()}');
+  print('Truncated: ${message.truncate(5)}');
+}
+```
+
+**Output:**
+
+```
+Reversed: traD olleH
+Truncated: Hello...
+```
+
+---
+
+## 9. Dart Null Safety
+
+Null safety is a feature in Dart that helps you prevent null error crashes. With null safety, all variables are non-nullable by default, meaning they must always contain a value and cannot be null. You have to explicitly tell Dart that a variable can be null.
+
+### Null Safety in Dart
+
+Dart's null safety feature helps developers write more robust code by eliminating null dereference errors at runtime. It introduces non-nullable types by default, requiring explicit declaration for nullable types using `?`.
+
+### Example 1: Non-nullable Variable (Default)
 
 ```dart
 void main() {
-  int temperature = 25;
-  if (temperature > 30) {
-    print('It\'s hot outside!');
-  } else if (temperature > 20) {
-    print('It\'s warm.');
+  String name = 'Alice';
+  // name = null; // A compile-time error occurs here
+  print(name);
+}
+```
+
+**Output:**
+
+```
+Alice
+```
+
+### Example 2: Nullable Variable
+
+```dart
+void main() {
+  String? name = null;
+  print(name);
+  name = 'Bob';
+  print(name);
+}
+```
+
+**Output:**
+
+```
+null
+Bob
+```
+
+### Example 3: Null Check
+
+```dart
+void main() {
+  String? name;
+  if (name != null) {
+    print('Name is not null: ${name.length}');
   } else {
-    print('It\'s cool.');
+    print('Name is null.');
+  }
+
+  name = 'Charlie';
+  if (name != null) {
+    print('Name is not null: ${name.length}');
   }
 }
 ```
@@ -1374,5 +1830,168 @@ void main() {
 **Output:**
 
 ```
-It's warm.
+Name is null.
+Name is not null: 7
+```
+
+### Example 4: Null Assertion Operator (!)
+
+```dart
+void main() {
+  String? name = 'David';
+  // Use ! to assert that name is not null. Use with caution.
+  print('Length of name: ${name!.length}');
+
+  String? nullableName;
+  // print(nullableName!.length); // This would throw a runtime error if nullableName is null
+}
+```
+
+**Output:**
+
+```
+Length of name: 5
+```
+
+### Type Promotion in Dart
+
+Type promotion allows Dart to automatically refine the type of a variable to a more specific non-nullable type after a null check. This helps in writing cleaner code by avoiding unnecessary null assertions.
+
+### Example 5: Type Promotion after Null Check
+
+```dart
+void main() {
+  Object name = 'Eve';
+
+  if (name is String) {
+    // name is promoted to String within this block
+    print('Length of name: ${name.length}');
+  }
+}
+```
+
+**Output:**
+
+```
+Length of name: 3
+```
+
+### Example 6: Type Promotion with Nullable Type
+
+```dart
+void main() {
+  String? message = 'Hello';
+
+  if (message != null) {
+    // message is promoted from String? to String
+    print('Message in uppercase: ${message.toUpperCase()}');
+  }
+
+  message = null;
+  if (message != null) {
+    print('This will not print.');
+  }
+}
+```
+
+**Output:**
+
+```
+Message in uppercase: HELLO
+```
+
+### Late Keyword in Dart
+
+ The `late` keyword in Dart allows you to declare a non-nullable variable that is initialized later. This is useful when you know a variable will be assigned before it's used, but its initial value isn't available at declaration time.
+
+### Example 7: Late Variable Initialization
+
+```dart
+late String greeting;
+
+void main() {
+  greeting = 'Good morning!';
+  print(greeting);
+}
+```
+
+**Output:**
+
+```
+Good morning!
+```
+
+### Example 8: Late Variable with Initializer
+
+```dart
+late String value = _getHeavyValue();
+
+String _getHeavyValue() {
+  print('Calculating heavy value...');
+  return 'Heavy Value';
+}
+
+void main() {
+  print('Before accessing value.');
+  print(value);
+  print('After accessing value.');
+}
+```
+
+**Output:**
+
+```
+Before accessing value.
+Calculating heavy value...
+Heavy Value
+After accessing value.
+```
+
+### Example 9: Late Final Variable
+
+```dart
+late final String configuration;
+
+void initializeConfig(String config) {
+  configuration = config;
+}
+
+void main() {
+  initializeConfig('Production Settings');
+  print('Configuration: $configuration');
+  // configuration = 'Development Settings'; // This would cause an error as it's a late final
+}
+```
+
+**Output:**
+
+```
+Configuration: Production Settings
+```
+
+### Example 10: Late Variable in a Class
+
+```dart
+class User {
+  late String email;
+
+  User(String initialEmail) {
+    email = initialEmail;
+  }
+
+  void displayEmail() {
+    print('User Email: $email');
+  }
+}
+
+void main() {
+  var user = User('test@example.com');
+  user.displayEmail();
+}
+```
+
+**Output:**
+
+```
+User Email: test@example.com
 ```
