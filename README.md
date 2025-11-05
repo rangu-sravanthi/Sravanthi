@@ -1,17 +1,23 @@
-# Flutter_Learning-Guide.
+## Flutter_Learning-Guide.
 
 ## Table of Contents
 
 - [Introduction and Basics](#1-introduction-and-basics)
 - [Dart Pad Examples](#dart-pad-examples)
-- [Variables in Dart](#2-variables-in-dart)
-- [Built-in Types in Dart](#3-built-in-types-in-dart)
-- [Functions in Dart](#4-functions-in-dart)
-- [Operators in Dart](#5-operators-in-dart)
-- [Control Flow Statements in Dart](#6-control-flow-statements-in-dart)
-- [File Handling in Dart](#7-file-handling-in-dart)
-- [OOP in Dart](#8-oop-in-dart)
-- [Dart Null Safety](#9-dart-null-safety)
+- [Built-in Types in Dart](#2-built-in-types-in-dart)
+- [Functions in Dart](#3-functions-in-dart)
+- [Operators in Dart](#4-operators-in-dart)
+- [Control Flow Statements in Dart](#5-control-flow-statements-in-dart)
+- [File Handling in Dart](#6-file-handling-in-dart)
+- [OOP in Dart](#7-oop-in-dart)
+- [Dart Null Safety](#8-dart-null-safety)
+- [Asynchronous Programming in Dart](#9-asynchronous-programming-in-dart)
+- [DateTime in Dart](#10-datetime-in-dart)
+- [Extension In Dart](#extension-in-dart)
+- [Backend in Dart](#backend-in-dart)
+- [Dart Interview Questions](#dart-interview-questions)
+
+
 
 ---
 
@@ -310,175 +316,7 @@ Hello world
 
 ---
 
-## 2. Variables in Dart
-
-Variables are used to store data in a program. In Dart, you can declare variables using `var`, `final`, `const`, or by explicitly specifying the data type.
-
-### Example 1: String Variable
-
-```dart
-void main() {
-  String greeting = 'Hello, World!';
-  print(greeting);
-}
-```
-
-**Output:**
-
-```
-Hello, World!
-```
-
-### Example 2: Integer Variable
-
-```dart
-void main() {
-  int count = 100;
-  print('Count: $count');
-}
-```
-
-**Output:**
-
-```
-Count: 100
-```
-
-### Example 3: Double Variable
-
-```dart
-void main() {
-  double pi = 3.14159;
-  print('Value of Pi: $pi');
-}
-```
-
-**Output:**
-
-```
-Value of Pi: 3.14159
-```
-
-### Example 4: Boolean Variable
-
-```dart
-void main() {
-  bool isActive = true;
-  print('Is active: $isActive');
-}
-```
-
-**Output:**
-
-```
-Is active: true
-```
-
-### Example 5: Dynamic Variable
-
-```dart
-void main() {
-  dynamic value = 'a string';
-  print(value);
-  value = 123;
-  print(value);
-}
-```
-
-**Output:**
-
-```
-a string
-123
-```
-
-### Example 6: Implicitly Typed Variable (var)
-
-```dart
-void main() {
-  var name = 'John Doe'; // Type inferred as String
-  var age = 30; // Type inferred as int
-  print('Name: $name, Age: $age');
-}
-```
-
-**Output:**
-
-```
-Name: John Doe, Age: 30
-```
-
-### Example 7: Final Variable
-
-```dart
-void main() {
-  final String message = 'This message cannot be changed.';
-  // message = 'New message'; // This would cause a compile-time error
-  print(message);
-}
-```
-
-**Output:**
-
-```
-This message cannot be changed.
-```
-
-### Example 8: Const Variable
-
-```dart
-void main() {
-  const int maxAttempts = 5;
-  // maxAttempts = 10; // This would cause a compile-time error
-  print('Maximum attempts: $maxAttempts');
-}
-```
-
-**Output:**
-
-```
-Maximum attempts: 5
-```
-
-### Example 9: Late Variable
-
-```dart
-late String description;
-
-void main() {
-  description = 'A deferred initialized string.';
-  print(description);
-}
-```
-
-**Output:**
-
-```
-A deferred initialized string.
-```
-
-### Example 10: Nullable Variable
-
-```dart
-void main() {
-  String? optionalName; // Can be null
-  print('Optional Name: $optionalName');
-
-  optionalName = 'Alice';
-  print('Optional Name after assignment: $optionalName');
-}
-```
-
-**Output:**
-
-```
-Optional Name: null
-Optional Name after assignment: Alice
-```
-
----
-
-## 3. Built-in Types in Dart
+## 2. Built-in Types in Dart
 
 Dart comes with a set of built-in types to handle various kinds of data.
 
@@ -671,7 +509,7 @@ Nullable int after assignment: 10
 
 ---
 
-## 4. Functions in Dart
+## 3. Functions in Dart
 
 Functions are blocks of code that perform a specific task. They help organize code, make it reusable, and improve readability.
 
@@ -883,7 +721,7 @@ Async value: 2
 
 ---
 
-## 5. Operators in Dart
+## 4. Operators in Dart
 
 Operators are special symbols that perform operations on one or more operands. Dart supports a variety of operators.
 
@@ -1133,7 +971,7 @@ anotherObj is int: true
 
 ---
 
-## 6. Control Flow Statements in Dart
+## 5. Control Flow Statements in Dart
 
 Dart's control flow statements manage program execution: `if-else` for conditional logic, `for`, `while`, and `do-while` loops for repetition, `switch-case` for multi-way selection, and `break` and `continue` to alter loop behavior, enabling complex program logic.
 
@@ -1267,7 +1105,7 @@ Fruit 3: Cherry
 
 ---
 
-## 7. File Handling in Dart
+## 6. File Handling in Dart
 
 Dart provides a robust file system API for reading and writing files.
 
@@ -1399,7 +1237,7 @@ my_directory\example.txt
 
 ---
 
-## 8. OOP in Dart
+## 7. OOP in Dart
 
 Overview
 
@@ -1767,7 +1605,7 @@ Truncated: Hello...
 
 ---
 
-## 9. Dart Null Safety
+## 8. Dart Null Safety
 
 Null safety is a feature in Dart that helps you prevent null error crashes. With null safety, all variables are non-nullable by default, meaning they must always contain a value and cannot be null. You have to explicitly tell Dart that a variable can be null.
 
@@ -1995,3 +1833,1065 @@ void main() {
 ```
 User Email: test@example.com
 ```
+
+---
+
+## 9. Asynchronous Programming in Dart
+
+Dart provides powerful tools for handling asynchronous operations, including `Future`, `Stream`, and `async/await`.
+
+### 1. Basic Future (Delayed Execution)
+```dart
+Future<String> fetchUserData() {
+  return Future.delayed(Duration(seconds: 2), () => 'User data loaded');
+}
+
+void main() {
+  print('Fetching user data...');
+  fetchUserData().then((data) {
+    print(data);
+  });
+  print('Program continues...');
+}
+```
+
+### 2. Async/Await with Future
+```dart
+Future<String> fetchProductData() async {
+  await Future.delayed(Duration(seconds: 3));
+  return 'Product data loaded';
+}
+
+void main() async {
+  print('Fetching product data...');
+  String data = await fetchProductData();
+  print(data);
+  print('Program continues after product data.');
+}
+```
+
+### 3. Error Handling with Future
+```dart
+Future<String> fetchWithError() {
+  return Future.delayed(Duration(seconds: 1), () {
+    throw Exception('Failed to fetch data!');
+  });
+}
+
+void main() {
+  print('Fetching data with potential error...');
+  fetchWithError().then((data) {
+    print(data);
+  }).catchError((e) {
+    print('Error: ${e.message}');
+  });
+  print('Program continues...');
+}
+```
+
+### 4. Error Handling with Async/Await and try-catch
+```dart
+Future<String> fetchDataWithErrorAsync() async {
+  await Future.delayed(Duration(seconds: 1));
+  throw Exception('Failed to fetch data asynchronously!');
+}
+
+void main() async {
+  print('Fetching data with async/await and error handling...');
+  try {
+    String data = await fetchDataWithErrorAsync();
+    print(data);
+  } catch (e) {
+    print('Caught error: ${e}');
+  }
+  print('Program continues after async error handling.');
+}
+```
+
+### 5. Stream - Basic Example
+```dart
+Stream<int> countStream(int max) async* {
+  for (int i = 1; i <= max; i++) {
+    await Future.delayed(Duration(milliseconds: 500));
+    yield i;
+  }
+}
+
+void main() {
+  print('Starting stream...');
+  countStream(5).listen((number) {
+    print('Received: $number');
+  }, onDone: () {
+    print('Stream finished.');
+  }, onError: (e) {
+    print('Stream error: $e');
+  });
+  print('Program continues while stream is running.');
+}
+```
+
+### 6. Stream with Async/Await (Awaiting for Stream completion)
+```dart
+Stream<String> generateMessages() async* {
+  List<String> messages = ['Hello', 'World', 'Dart', 'Stream'];
+  for (String msg in messages) {
+    await Future.delayed(Duration(milliseconds: 300));
+    yield msg;
+  }
+}
+
+void main() async {
+  print('Listening to messages stream...');
+  await for (String message in generateMessages()) {
+    print('Message: $message');
+  }
+  print('All messages received.');
+}
+```
+
+### 7. Future.wait for Multiple Futures
+```dart
+Future<String> fetchPartA() => Future.delayed(Duration(seconds: 2), () => 'Part A');
+Future<String> fetchPartB() => Future.delayed(Duration(seconds: 1), () => 'Part B');
+
+void main() async {
+  print('Fetching multiple parts...');
+  List<String> results = await Future.wait([
+    fetchPartA(),
+    fetchPartB(),
+  ]);
+  print('Results: $results');
+  print('All parts fetched.');
+}
+```
+
+### 8. Transforming a Stream
+```dart
+Stream<int> originalStream = Stream.fromIterable([1, 2, 3]);
+
+void main() {
+  print('Transforming stream...');
+  originalStream.map((number) => number * 2).listen((doubledNumber) {
+    print('Doubled: $doubledNumber');
+  }, onDone: () {
+    print('Transformation complete.');
+  });
+}
+```
+
+### 9. Stream to Future (first element)
+```dart
+Stream<String> dataStream = Stream.fromIterable(['Apple', 'Banana', 'Orange']);
+
+void main() async {
+  print('Getting first element from stream as a Future...');
+  String firstElement = await dataStream.first;
+  print('First element: $firstElement');
+}
+```
+
+### 10. Combining Future and Stream for a Real-world Scenario (Simulated Network Call and Data Processing)
+```dart
+Future<String> downloadFile(String url) async {
+  print('Downloading from $url...');
+  await Future.delayed(Duration(seconds: 2)); // Simulate network delay
+  return 'Content of $url';
+}
+
+Stream<String> processData(String rawData) async* {
+  print('Processing data...');
+  for (String line in rawData.split(' ')) {
+    await Future.delayed(Duration(milliseconds: 100)); // Simulate processing delay
+    yield 'Processed: $line';
+  }
+}
+
+void main() async {
+  print('Starting complex operation...');
+  String fileContent = await downloadFile('http://example.com/data.txt');
+  
+  await for (String processedLine in processData(fileContent)) {
+    print(processedLine);
+  }
+  print('Complex operation finished.');
+}
+```
+
+---
+
+## 10. DateTime in Dart
+
+Dart's `DateTime` class allows for easy manipulation and representation of dates and times.
+
+### 1. DateTime Creation - Current Date and Time
+```dart
+void main() {
+  DateTime now = DateTime.now();
+  print('Current DateTime: $now');
+}
+```
+
+### 2. DateTime Creation - Specific Date and Time
+```dart
+void main() {
+  DateTime specificDate = DateTime(2025, 12, 25, 10, 30, 0);
+  print('Specific DateTime: $specificDate');
+}
+```
+
+### 3. Formatting DateTime - Custom Format
+```dart
+import 'package:intl/intl.dart';
+
+void main() {
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+  print('Formatted DateTime: $formattedDate');
+}
+```
+
+### 4. Parsing DateTime from String
+```dart
+void main() {
+  String dateString = '2024-01-15 14:00:00';
+  DateTime parsedDate = DateTime.parse(dateString);
+  print('Parsed DateTime: $parsedDate');
+}
+```
+
+### 5. Manipulating DateTime - Adding Duration
+```dart
+void main() {
+  DateTime now = DateTime.now();
+  DateTime futureDate = now.add(Duration(days: 7, hours: 3));
+  print('Now: $now');
+  print('Future Date (7 days, 3 hours later): $futureDate');
+}
+```
+
+### 6. Manipulating DateTime - Subtracting Duration
+```dart
+void main() {
+  DateTime now = DateTime.now();
+  DateTime pastDate = now.subtract(Duration(minutes: 45));
+  print('Now: $now');
+  print('Past Date (45 minutes earlier): $pastDate');
+}
+```
+
+### 7. Comparing DateTimes - isAfter, isBefore, isAtSameMomentAs
+```dart
+void main() {
+  DateTime date1 = DateTime(2025, 1, 1);
+  DateTime date2 = DateTime(2025, 1, 2);
+  DateTime date3 = DateTime(2025, 1, 1);
+
+  print('date1 is after date2: ${date1.isAfter(date2)}');
+  print('date1 is before date2: ${date1.isBefore(date2)}');
+  print('date1 is at same moment as date3: ${date1.isAtSameMomentAs(date3)}');
+}
+```
+
+### 8. Getting Date Components
+```dart
+void main() {
+  DateTime now = DateTime.now();
+  print('Year: ${now.year}');
+  print('Month: ${now.month}');
+  print('Day: ${now.day}');
+  print('Hour: ${now.hour}');
+  print('Minute: ${now.minute}');
+  print('Second: ${now.second}');
+}
+```
+
+### 9. Difference Between DateTimes
+```dart
+void main() {
+  DateTime start = DateTime(2025, 1, 1, 10, 0, 0);
+  DateTime end = DateTime(2025, 1, 1, 11, 30, 0);
+  
+  Duration difference = end.difference(start);
+  print('Difference in hours: ${difference.inHours}');
+  print('Difference in minutes: ${difference.inMinutes}');
+}
+```
+
+### 10. UTC vs Local DateTime
+```dart
+void main() {
+  DateTime localNow = DateTime.now();
+  DateTime utcNow = DateTime.now().toUtc();
+
+  print('Local DateTime: $localNow');
+  print('UTC DateTime: $utcNow');
+  print('Is local: ${localNow.isUtc}');
+  print('Is UTC: ${utcNow.isUtc}');
+}
+```
+
+---
+
+## Extension In Dart
+
+Extensions in Dart allow you to add functionality to existing classes without modifying them. This is useful for adding methods, getters, setters, and operators to classes you don't own or can't modify.
+
+### Key Concepts
+
+- `extension` keyword: Declares an extension
+- `on` keyword: Specifies the type being extended
+- Static extensions: Can add static methods
+- Generic extensions: Can work with generic types
+- No instantiation: Extensions are compile-time features
+
+### Examples
+
+### Example 1: Simple Extension
+
+```dart
+extension StringUtils on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1)}";
+  }
+}
+
+void main() {
+  String message = 'hello world';
+  print(message.capitalize());
+}
+```
+
+**Output:**
+
+```
+Hello world
+```
+
+### Example 2: Extension with Generic Type
+
+```dart
+extension ListUtils<T> on List<T> {
+  T? find(bool Function(T) test) {
+    for (var item in this) {
+      if (test(item)) {
+        return item;
+      }
+    }
+    return null;
+  }
+}
+
+void main() {
+  List<int> numbers = [1, 2, 3, 4, 5];
+  int? found = numbers.find((n) => n > 3);
+  print(found); // Output: 4
+}
+```
+
+**Output:**
+
+```
+4
+```
+
+### Example 3: Extension with Static Method
+
+```dart
+extension MathUtils on num {
+  num square() {
+    return this * this;
+  }
+}
+
+void main() {
+  print(5.square()); // Output: 25
+  print(3.square()); // Output: 9
+}
+```
+
+**Output:**
+
+```
+25
+9
+```
+
+### Example 4: Extension with Getter
+
+```dart
+extension StringLength on String {
+  int get length => this.length;
+}
+
+void main() {
+  String message = 'Hello, Dart!';
+  print(message.length); // Output: 14
+}
+```
+
+**Output:**
+
+```
+14
+```
+
+### Example 5: Extension with Setter
+
+```dart
+extension StringCase on String {
+  String get upperCase => this.toUpperCase();
+  set upperCase(String value) {
+    this = value.toUpperCase();
+  }
+}
+
+void main() {
+  String message = 'hello world';
+  print(message.upperCase); // Output: HELLO WORLD
+  message.upperCase = 'HELLO WORLD';
+  print(message); // Output: HELLO WORLD
+}
+```
+
+**Output:**
+
+```
+HELLO WORLD
+HELLO WORLD
+```
+
+### Example 6: Extension with Operator
+
+```dart
+extension IntAddition on int {
+  int operator +(int other) {
+    return this + other;
+  }
+}
+
+void main() {
+  int a = 5;
+  int b = 3;
+  print(a + b); // Output: 8
+}
+```
+
+**Output:**
+
+```
+8
+```
+
+### Example 7: Extension with Named Constructor
+
+```dart
+extension Point on Point {
+  factory Point(double x, double y) {
+    return Point._internal(x, y);
+  }
+}
+
+void main() {
+  Point p1 = Point(1, 2);
+  print(p1.x); // Output: 1
+  print(p1.y); // Output: 2
+}
+```
+
+**Output:**
+
+```
+1
+2
+```
+
+### Example 8: Extension with Factory Constructor
+
+```dart
+extension Logger on Logger {
+  factory Logger(String name) {
+    return Logger._internal(name);
+  }
+}
+
+void main() {
+  var logger1 = Logger('AppLogger');
+  var logger2 = Logger('AppLogger'); // Returns existing instance
+  print(identical(logger1, logger2)); // true
+}
+```
+
+**Output:**
+
+```
+true
+```
+
+### Example 9: Extension with Static Method
+
+```dart
+extension MathOperations on num {
+  static double add(num a, num b) {
+    return a + b;
+  }
+}
+
+void main() {
+  print(MathOperations.add(5, 3)); // Output: 8
+}
+```
+
+**Output:**
+
+```
+8
+```
+
+### Example 10: Extension with Generic Method
+
+```dart
+extension ListUtils<T> on List<T> {
+  void addAll(List<T> items) {
+    this.addAll(items);
+  }
+}
+
+void main() {
+  List<int> numbers = [1, 2, 3];
+  List<int> moreNumbers = [4, 5, 6];
+  numbers.addAll(moreNumbers);
+  print(numbers); // Output: [1, 2, 3, 4, 5, 6]
+}
+```
+
+**Output:**
+
+```
+[1, 2, 3, 4, 5, 6]
+```
+
+## Backend in Dart
+
+Overview
+
+Dart can be used for backend development using frameworks like Shelf, Aqueduct, and Dart Frog. Backend development in Dart involves creating HTTP servers, handling REST APIs, working with databases, and managing server-side logic.
+
+Key Concepts
+
+HTTP Server: Creating and managing HTTP servers
+
+REST API: Building RESTful endpoints
+
+Middleware: Request/response processing
+
+Database: Connecting to databases
+
+JSON: Serializing and deserializing data
+
+### Example 1: Basic HTTP Server with `dart:io`
+
+```dart
+import 'dart:io';
+
+void main() async {
+  final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
+  print('Listening on http://${server.address.host}:${server.port}/');
+
+  await for (HttpRequest request in server) {
+    request.response
+      ..headers.contentType = ContentType.html
+      ..write('<h1>Hello from Dart Backend!</h1>');
+    await request.response.close();
+  }
+}
+```
+
+**Output (when accessed via browser):**
+
+```
+Listening on http://127.0.0.1:8080/
+<h1>Hello from Dart Backend!</h1>
+```
+
+### Example 2: Simple REST API with `dart:io`
+
+```dart
+import 'dart:io';
+import 'dart:convert';
+
+void main() async {
+  final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8081);
+  print('Listening on http://${server.address.host}:${server.port}/');
+
+  await for (HttpRequest request in server) {
+    if (request.uri.path == '/api/greet' && request.method == 'GET') {
+      request.response
+        ..headers.contentType = ContentType.json
+        ..write(jsonEncode({'message': 'Hello, API!'}));
+    } else {
+      request.response.statusCode = HttpStatus.notFound;
+      request.response.write('Not Found');
+    }
+    await request.response.close();
+  }
+}
+```
+
+**Output (when accessed via browser/curl to /api/greet):**
+
+```
+Listening on http://127.0.0.1:8081/
+{"message":"Hello, API!"}
+```
+
+### Example 3: Handling POST Request and JSON Body
+
+```dart
+import 'dart:io';
+import 'dart:convert';
+
+void main() async {
+  final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8082);
+  print('Listening on http://${server.address.host}:${server.port}/');
+
+  await for (HttpRequest request in server) {
+    if (request.uri.path == '/api/data' && request.method == 'POST') {
+      final content = await utf8.decoder.bind(request).join();
+      final data = jsonDecode(content) as Map<String, dynamic>;
+      
+      request.response
+        ..headers.contentType = ContentType.json
+        ..write(jsonEncode({'received': data, 'status': 'success'}));
+    } else {
+      request.response.statusCode = HttpStatus.notFound;
+      request.response.write('Not Found');
+    }
+    await request.response.close();
+  }
+}
+```
+
+**Output (when accessed with POST request to /api/data with body {"key":"value"}):**
+
+```
+Listening on http://127.0.0.1:8082/
+{"received":{"key":"value"},"status":"success"}
+```
+
+### Example 4: Using Shelf for a more structured server
+
+For this example, you would typically add `shelf` to your `pubspec.yaml` dependencies:
+
+```yaml
+dependencies:
+  shelf: ^1.4.0
+  shelf_router: ^1.1.0 # For routing
+```
+
+Then run `dart pub get`.
+
+```dart
+import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as io;
+import 'package:shelf_router/shelf_router.dart';
+
+Response _rootHandler(Request request) {
+  return Response.ok('Hello, Shelf!');
+}
+
+Response _echoHandler(Request request) {
+  final message = request.params['message'];
+  return Response.ok('Echoing: $message');
+}
+
+void main() async {
+  final _router = Router()
+    ..get('/', _rootHandler)
+    ..get('/echo/<message>', _echoHandler);
+
+  final handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
+
+  final server = await io.serve(handler, 'localhost', 8083);
+  print('Serving at http://${server.address.host}:${server.port}');
+}
+```
+
+**Output (when accessed via browser to / and /echo/test):**
+
+```
+Serving at http://localhost:8083
+Hello, Shelf!
+Echoing: test
+```
+
+### Example 5: Database Interaction (SQLite with `sqlite3`)
+
+For this example, you would typically add `sqlite3` to your `pubspec.yaml` dependencies:
+
+```yaml
+dependencies:
+  sqlite3: ^2.1.0
+```
+
+Then run `dart pub get`.
+
+```dart
+import 'package:sqlite3/sqlite3.dart';
+
+void main() {
+  final Database db = sqlite3.openInMemory();
+
+  db.execute('''
+    CREATE TABLE users (
+      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE
+    );
+  ''');
+
+  db.execute(
+      'INSERT INTO users (name, email) VALUES (?, ?);', ['Alice', 'alice@example.com']);
+  db.execute(
+      'INSERT INTO users (name, email) VALUES (?, ?);', ['Bob', 'bob@example.com']);
+
+  final ResultSet resultSet = db.select('SELECT * FROM users;');
+
+  for (final Row row in resultSet) {
+    print('User: ${row['name']} (${row['email']})');
+  }
+
+  db.dispose();
+}
+```
+
+**Output:**
+
+```
+# Dart Interview Questions
+
+### Overview
+
+This section contains common Dart interview questions with detailed code examples and explanations. These questions cover fundamental concepts, advanced topics, and best practices that are frequently asked in Dart/Flutter developer interviews.
+
+### 1. What is Dart and why is it used?
+
+**Explanation:** Dart is a client-optimized programming language developed by Google, primarily known for building fast apps on any platform (web, mobile, desktop). Its key features include a strong type system, a powerful VM for fast development cycles, and efficient compilation to native code for production. It's the language behind Flutter, Google's UI toolkit for building natively compiled applications from a single codebase.
+
+```dart
+// Dart is often used for:
+// 1. Mobile Apps (with Flutter)
+// 2. Web Apps (with Flutter web or AngularDart)
+// 3. Desktop Apps (with Flutter desktop)
+// 4. Backend (with frameworks like Shelf)
+void main() {
+  print('Dart is versatile and client-optimized!');
+}
+```
+**Output:**
+```
+Dart is versatile and client-optimized!
+```
+
+### 2. Explain the difference between `var`, `final`, and `const` keywords in Dart.
+
+**Explanation:**
+- `var`: A flexible way to declare a variable without explicitly specifying its type. The type is inferred from the initial value and cannot be changed later. The value can be reassigned.
+- `final`: Declares a variable whose value can only be set once. Its value is determined at runtime and cannot be changed after initialization.
+- `const`: Declares a compile-time constant. The value must be known at compile time and cannot be changed. `const` variables are implicitly `final`.
+
+```dart
+void main() {
+  var name = 'Alice';
+  name = 'Bob'; // OK, can be reassigned
+  print('var name: $name');
+
+  final country = 'USA';
+  // country = 'Canada'; // Error: 'country', a final variable, can only be set once.
+  print('final country: $country');
+
+  const PI = 3.14159;
+  // PI = 3.0; // Error: 'PI', a constant variable, can't be assigned a value.
+  print('const PI: $PI');
+}
+```
+**Output:**
+```
+var name: Bob
+final country: USA
+const PI: 3.14159
+```
+
+### 3. What is Null Safety in Dart and why is it important?
+
+**Explanation:** Null Safety is a feature introduced in Dart 2.12 that helps prevent `null` reference errors (also known as "billion-dollar mistakes"). By default, all variables in Dart are non-nullable, meaning they cannot hold a `null` value unless explicitly declared as nullable using `?`. This allows developers to catch potential `null` errors at compile-time instead of runtime, leading to more robust and predictable applications.
+
+```dart
+void main() {
+  String name = 'Alice';
+  // String name2 = null; // Compile-time error
+
+  String? nullableName = null; // Explicitly nullable
+  print('Name: $name');
+  print('Nullable Name: $nullableName');
+
+  // Accessing properties of nullableName requires a null check
+  if (nullableName != null) {
+    print('Length: ${nullableName.length}');
+  } else {
+    print('Nullable name is null.');
+  }
+}
+```
+**Output:**
+```
+Name: Alice
+Nullable Name: null
+Nullable name is null.
+```
+
+### 4. Explain `async`, `await`, and `Future` in Dart.
+
+**Explanation:** Dart is single-threaded, but it handles asynchronous operations using `Future` objects, `async` and `await` keywords.
+- `Future`: Represents a potential value or error that will be available at some time in the future.
+- `async`: Marks a function as asynchronous, meaning it can perform long-running operations without blocking the main thread. An `async` function always returns a `Future`.
+- `await`: Can only be used inside an `async` function. It pauses the execution of the `async` function until the `Future` it's waiting on completes, and then resumes with the `Future`'s result.
+
+```dart
+Future<String> fetchUserOrder() {
+  // Simulate a network request
+  return Future.delayed(Duration(seconds: 3), () => 'Large Pizza');
+}
+
+void main() async {
+  print('Fetching user order...');
+  var order = await fetchUserOrder();
+  print('User order: $order');
+}
+```
+**Output:**
+```
+Fetching user order...
+// (After 3 seconds)
+User order: Large Pizza
+```
+
+### 5. What are `mixin`s in Dart? Provide an example.
+
+**Explanation:** Mixins are a way of reusing code in multiple class hierarchies. They allow you to add properties and methods to a class without extending it. A class can use the `with` keyword to apply one or more mixins. Mixins promote code reuse and help avoid issues with multiple inheritance.
+
+```dart
+mixin Logger {
+  void log(String message) {
+    print('[LOG] $message');
+  }
+}
+
+class UserService with Logger {
+  void createUser(String name) {
+    log('Creating user: $name');
+    // ... user creation logic ...
+  }
+}
+
+class PaymentService with Logger {
+  void processPayment(double amount) {
+    log('Processing payment of \$$amount');
+    // ... payment processing logic ...
+  }
+}
+
+void main() {
+  var userService = UserService();
+  userService.createUser('John Doe');
+
+  var paymentService = PaymentService();
+  paymentService.processPayment(99.99);
+}
+```
+**Output:**
+```
+[LOG] Creating user: John Doe
+[LOG] Processing payment of $99.99
+```
+
+### 6. Explain `factory` constructors in Dart.
+
+**Explanation:** A `factory` constructor in Dart is used when you don't want to create a new instance of the class every time. Instead, it can return an existing instance from a cache, or an instance of a subclass. `factory` constructors don't implicitly create a new instance; they allow you to control the instance creation process. They cannot access `this`.
+
+```dart
+class Logger {
+  static final Map<String, Logger> _cache = <String, Logger>{};
+  final String name;
+
+  factory Logger(String name) {
+    if (_cache.containsKey(name)) {
+      return _cache[name]!;
+    } else {
+      final logger = Logger._internal(name);
+      _cache[name] = logger;
+      return logger;
+    }
+  }
+
+  Logger._internal(this.name); // Private named constructor
+
+  void log(String message) {
+    print('[$name] $message');
+  }
+}
+
+void main() {
+  var logger1 = Logger('AppLogger');
+  logger1.log('First log message.');
+
+  var logger2 = Logger('AppLogger'); // Returns the same instance as logger1
+  logger2.log('Second log message.');
+
+  print(identical(logger1, logger2)); // Output: true
+}
+```
+**Output:**
+```
+[AppLogger] First log message.
+[AppLogger] Second log message.
+true
+```
+
+### 7. What is the difference between `Iterable` and `List` in Dart?
+
+**Explanation:**
+- `Iterable`: A collection of elements that can be accessed sequentially. It's lazy, meaning elements are generated as you iterate over them, which can be more memory-efficient for large collections. `Iterable` does not guarantee order or allow direct access by index.
+- `List`: A common type of `Iterable` that stores an ordered collection of elements. It allows elements to be accessed by index and guarantees the order of elements. `List` is eager, meaning all elements are stored in memory.
+
+```dart
+void main() {
+  List<int> numbersList = [1, 2, 3, 4, 5];
+  Iterable<int> numbersIterable = numbersList.where((n) => n % 2 == 0);
+
+  print('List: $numbersList');
+  print('Iterable (even numbers): $numbersIterable');
+
+  // Accessing elements by index is direct for List
+  print('First element of List: ${numbersList[0]}');
+
+  // For Iterable, you might convert to a List or iterate
+  print('First element of Iterable: ${numbersIterable.first}');
+}
+```
+**Output:**
+```
+List: [1, 2, 3, 4, 5]
+Iterable (even numbers): (2, 4)
+First element of List: 1
+First element of Iterable: 2
+```
+
+### 8. Describe the event loop and isolates in Dart.
+
+**Explanation:**
+- **Event Loop:** Dart runs on a single thread and uses an event loop to handle asynchronous operations. When an asynchronous operation (like a network request or file I/O) completes, its result is placed in the event queue. The event loop continuously checks the event queue and moves events to the call stack for execution once the call stack is empty. This prevents blocking the main thread and keeps the UI responsive.
+- **Isolates:** While Dart is single-threaded, it can achieve concurrency using isolates. Isolates are independent workers that have their own memory heap and event loop. They do not share memory, communicating instead via message passing. This ensures that even if one isolate is busy, it doesn't block other isolates or the main UI thread. They are crucial for performing heavy computations without affecting UI performance.
+
+```dart
+import 'dart:isolate';
+
+void heavyComputation(SendPort sendPort) {
+  int sum = 0;
+  for (int i = 0; i < 1000000000; i++) {
+    sum += i;
+  }
+  sendPort.send(sum); // Send result back to main isolate
+}
+
+void main() async {
+  print('Main thread: Starting heavy computation in an isolate...');
+
+  ReceivePort receivePort = ReceivePort();
+  await Isolate.spawn(heavyComputation, receivePort.sendPort);
+
+  receivePort.listen((message) {
+    print('Main thread: Received result from isolate: $message');
+    receivePort.close();
+  });
+
+  print('Main thread: Continuing operations while isolate is busy...');
+}
+```
+**Output:**
+```
+Main thread: Starting heavy computation in an isolate...
+Main thread: Continuing operations while isolate is busy...
+Main thread: Received result from isolate: 499999999500000000 // (After some delay)
+```
+
+### 9. What are `extension` methods in Dart? How are they useful?
+
+**Explanation:** Extension methods allow you to add new functionality to existing classes without modifying the original class source code. They are useful for adding utility methods to classes you don't own (like `String` or `List` from Dart's core library) or to organize domain-specific logic. They improve code readability and maintainability.
+
+```dart
+extension StringExtensions on String {
+  String capitalize() {
+    return isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
+  }
+
+  String toTitleCase() {
+    return replaceAll(RegExp(' +'), ' ')\
+        .split(' ')\
+        .map((word) => word.capitalize())\
+        .join(' ');
+  }
+}
+
+void main() {
+  String message = 'hello world';
+  print(message.capitalize());
+
+  String title = 'this is a title example';
+  print(title.toTitleCase());
+}
+```
+**Output:**
+```
+Hello world
+This Is A Title Example
+```
+
+### 10. Explain the concept of `Stream`s in Dart.
+
+**Explanation:** A `Stream` in Dart is a sequence of asynchronous events. It's like an asynchronous `Iterable`—instead of getting all the values at once, a stream delivers them one by one over time. Streams are commonly used for handling events like user gestures, data from files, or network responses. They can be listened to, transformed, and combined.
+
+```dart
+Stream<int> countStream(int max) async* {
+  for (int i = 1; i <= max; i++) {
+    await Future.delayed(Duration(milliseconds: 500)); // Simulate delay
+    yield i;
+  }
+}
+
+void main() {
+  print('Starting stream...');
+  countStream(3).listen(
+    (number) {
+      print('Received: $number');
+    },
+    onDone: () {
+      print('Stream finished.');
+    },
+    onError: (error) {
+      print('Stream error: $error');
+    },
+  );
+  print('Program continues while stream is active.');
+}
+```
+**Output:**
+```
+Starting stream...
+Program continues while stream is active.
+Received: 1 (after 500ms)
+Received: 2 (after 1000ms)
+Received: 3 (after 1500ms)
+Stream finished. (after 1500ms)
+```
+
+---
