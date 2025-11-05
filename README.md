@@ -10,8 +10,10 @@
 - [Control Flow Statements in Dart](#5-control-flow-statements-in-dart)
 - [File Handling in Dart](#6-file-handling-in-dart)
 - [OOP in Dart](#7-oop-in-dart)
-- [Dart Null Safety](#8-dart-null-safety)
+- [Null Safety In Dart](#8-dart-null-safety)
 - [Asynchronous Programming in Dart](#9-asynchronous-programming-in-dart)
+-  [ Useful information]
+- [Final Vs Const](#final-vs-const)
 - [DateTime in Dart](#10-datetime-in-dart)
 - [Extension In Dart](#extension-in-dart)
 - [Backend in Dart](#backend-in-dart)
@@ -1605,7 +1607,7 @@ Truncated: Hello...
 
 ---
 
-## 8. Dart Null Safety
+## 8. Null Safety In Dart
 
 Null safety is a feature in Dart that helps you prevent null error crashes. With null safety, all variables are non-nullable by default, meaning they must always contain a value and cannot be null. You have to explicitly tell Dart that a variable can be null.
 
@@ -1836,7 +1838,7 @@ User Email: test@example.com
 
 ---
 
-## 9. Asynchronous Programming in Dart
+## 10.Asynchronous Programming
 
 Dart provides powerful tools for handling asynchronous operations, including `Future`, `Stream`, and `async/await`.
 
@@ -2019,7 +2021,34 @@ void main() async {
 
 ---
 
-## 10. DateTime in Dart
+11. Useful Information
+
+## Final Vs Const
+
+Overview
+
+Both `final` and `const` are used to create immutable values in Dart, but they have important differences:
+
+- `const`: Compile-time constant, must be known at compile time
+- `final`: Run-time constant, can be assigned once but value determined at runtime
+
+### 10 Examples of Final Vs Const
+
+#### Example 1: Basic `const` and `final`
+```dart
+const int compileTimeConst = 10;
+final int runTimeConst = DateTime.now().year;
+```
+
+**Output:**
+
+```
+// No direct output, values are assigned.
+// compileTimeConst is 10
+// runTimeConst will be the current year at runtime (e.g., 2025)
+```
+
+## Datetime In Dart
 
 Dart's `DateTime` class allows for easy manipulation and representation of dates and times.
 
@@ -2530,34 +2559,28 @@ For this example, you would typically add `sqlite3` to your `pubspec.yaml` depen
 
 ```yaml
 dependencies:
-  sqlite3: ^2.1.0
+  sqlite3: ^2.0.0
 ```
 
 Then run `dart pub get`.
 
 ```dart
+import 'dart:io';
 import 'package:sqlite3/sqlite3.dart';
 
 void main() {
-  final Database db = sqlite3.openInMemory();
+  final db = sqlite3.openInMemory();
 
   db.execute('''
-    CREATE TABLE users (
-      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      email TEXT NOT NULL UNIQUE
-    );
+    CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER);
   ''');
 
-  db.execute(
-      'INSERT INTO users (name, email) VALUES (?, ?);', ['Alice', 'alice@example.com']);
-  db.execute(
-      'INSERT INTO users (name, email) VALUES (?, ?);', ['Bob', 'bob@example.com']);
+  db.execute('INSERT INTO users (name, age) VALUES (?, ?);', ['Alice', 30]);
+  db.execute('INSERT INTO users (name, age) VALUES (?, ?);', ['Bob', 24]);
 
   final ResultSet resultSet = db.select('SELECT * FROM users;');
-
   for (final Row row in resultSet) {
-    print('User: ${row['name']} (${row['email']})');
+    print('User: ${row['name']}, Age: ${row['age']}');
   }
 
   db.dispose();
@@ -2567,657 +2590,115 @@ void main() {
 **Output:**
 
 ```
-User: Alice (alice@example.com)
-User: Bob (bob@example.com)
+User: Alice, Age: 30
+User: Bob, Age: 24
 ```
 
-### Example 6: Using Aqueduct for a more robust backend
+### Example 6: Basic Authentication
 
-For this example, you would typically add `aqueduct` to your `pubspec.yaml` dependencies:
+For this example, you would typically add `shelf_router` to your `pubspec.yaml` dependencies:
 
 ```yaml
 dependencies:
-  aqueduct: ^4.0.0 # For HTTP server
-  sqlite3: ^2.1.0 # For database
+  shelf: ^1.4.0
+  shelf_router: ^1.1.0
 ```
 
 Then run `dart pub get`.
 
 ```dart
-import 'package:aqueduct/aqueduct.dart';
 import 'dart:convert';
-import 'package:sqlite3/sqlite3.dart';
+import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as io;
+import 'package:shelf_router/shelf_router.dart';
 
-class _MyAppChannel extends ApplicationChannel {
-  final Database db;
-
-  _MyAppChannel(this.db);
-
-  @override
-  Future<void> prepare() async {
-    logger.onRecord.listen((record) => print(record.message));
-
-    db.execute('''
-      CREATE TABLE users (
-        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE
-      );
-    ''');
-    db.execute(
-        'INSERT INTO users (name, email) VALUES (?, ?);', ['Alice', 'alice@example.com']);
-    db.execute(
-        'INSERT INTO users (name, email) VALUES (?, ?);', ['Bob', 'bob@example.com']);
-
-    final router = Router();
-    router.route('/api/users').link(() => UsersController(db));
-    router.route('/api/posts').link(() => PostsController(db));
-
-    return;
-  }
-
-  @override
-  Controller get entryPoint {
-    final router = Router();
-
-    router.route('/api/users').link(() => UsersController(db));
-    router.route('/api/posts').link(() => PostsController(db));
-
-    return router;
-  }
+Response _loginHandler(Request request) {
+  // In a real application, you would validate credentials against a database
+  // and issue a token (e.g., JWT).
+  return Response.ok(jsonEncode({'token': 'fake_jwt_token_123'}),
+      headers: {'Content-Type': 'application/json'});
 }
 
-class UsersController extends ResourceController {
-  final Database db;
-
-  UsersController(this.db);
-
-  @Operation.get()
-  Future<Response> getUsers() async {
-    final ResultSet resultSet = db.select('SELECT * FROM users;');
-    final List<Map<String, dynamic>> users = resultSet.map((row) => row.toMap()).toList();
-    return Response.ok(jsonEncode(users));
+Response _protectedHandler(Request request) {
+  // In a real application, you would validate the token provided in the header.
+  final authHeader = request.headers['authorization'];
+  if (authHeader == 'Bearer fake_jwt_token_123') {
+    return Response.ok('Welcome to the protected resource!');
   }
-
-  @Operation.post()
-  Future<Response> createUser(@Bind.body() Map<String, dynamic> user) async {
-    await db.execute(
-        'INSERT INTO users (name, email) VALUES (?, ?);', [user['name'], user['email']]);
-    final ResultSet resultSet = db.select('SELECT * FROM users WHERE email = ?;', [user['email']]);
-    final Map<String, dynamic> createdUser = resultSet.first.toMap();
-    return Response.ok(jsonEncode(createdUser));
-  }
-}
-
-class PostsController extends ResourceController {
-  final Database db;
-
-  PostsController(this.db);
-
-  @Operation.get()
-  Future<Response> getPosts() async {
-    final ResultSet resultSet = db.select('SELECT * FROM posts;');
-    final List<Map<String, dynamic>> posts = resultSet.map((row) => row.toMap()).toList();
-    return Response.ok(jsonEncode(posts));
-  }
-
-  @Operation.post()
-  Future<Response> createPost(@Bind.body() Map<String, dynamic> post) async {
-    await db.execute(
-        'INSERT INTO posts (title, content) VALUES (?, ?);', [post['title'], post['content']]);
-    final ResultSet resultSet = db.select('SELECT * FROM posts WHERE title = ?;', [post['title']]);
-    final Map<String, dynamic> createdPost = resultSet.first.toMap();
-    return Response.ok(jsonEncode(createdPost));
-  }
+  return Response.forbidden('Unauthorized');
 }
 
 void main() async {
-  final db = sqlite3.openInMemory();
-  final app = Application<_MyAppChannel>(ApplicationConfiguration())
-    ..options.port = 8084;
+  final _router = Router()
+    ..post('/login', _loginHandler)
+    ..get('/protected', _protectedHandler);
 
-  await app.start(numberOfInstances: 1, constructor: () => _MyAppChannel(db));
-  print('Aqueduct server running on port ${app.options.port}');
+  final handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
+
+  final server = await io.serve(handler, 'localhost', 8084);
+  print('Serving at http://${server.address.host}:${server.port}');
 }
 ```
 
-**Output:**
+**Output (when accessed via curl):**
 
 ```
-Aqueduct server running on port 8084
+# To login (simulated):
+curl -X POST http://localhost:8084/login
+
+# Output: {"token":"fake_jwt_token_123"}
+
+# To access protected resource with valid token:
+curl -H "Authorization: Bearer fake_jwt_token_123" http://localhost:8084/protected
+
+# Output: Welcome to the protected resource!
+
+# To access protected resource with invalid token:
+curl -H "Authorization: Bearer wrong_token" http://localhost:8084/protected
+
+# Output: Unauthorized
 ```
 
-### Example 7: Database Interaction (PostgreSQL with `postgres`)
-
-For this example, you would typically add `postgres` to your `pubspec.yaml` dependencies:
-
-```yaml
-dependencies:
-  postgres: ^2.5.0
-```
-
-Then run `dart pub get`.
+### Example 7: Handling Query Parameters and Headers
 
 ```dart
-import 'package:postgres/postgres.dart';
+import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as io;
+import 'package:shelf_router/shelf_router.dart';
 
-void main() async {
-  final connection = PostgreSQLConnection(
-    'localhost',
-    5432,
-    'mydatabase',
-    username: 'myuser',
-    password: 'mypassword',
-  );
+Response _infoHandler(Request request) {
+  final name = request.url.queryParameters['name'] ?? 'Guest';
+  final userAgent = request.headers['user-agent'] ?? 'Unknown';
 
-  await connection.open();
-
-  await connection.query('''
-    CREATE TABLE IF NOT EXISTS products (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      price DOUBLE PRECISION NOT NULL
-    );
-  ''');
-
-  await connection.query(
-      'INSERT INTO products (name, price) VALUES (@name, @price);',
-      substitutionValues: {'name': 'Laptop', 'price': 1200.0});
-  await connection.query(
-      'INSERT INTO products (name, price) VALUES (@name, @price);',
-      substitutionValues: {'name': 'Mouse', 'price': 25.0});
-
-  final results = await connection.query('SELECT * FROM products;');
-
-  for (final row in results) {
-    print('Product: ${row[1]} (\$${row[2]})');
-  }
-
-  await connection.close();
-}
-```
-
-**Output:**
-
-```
-Product: Laptop ($1200.0)
-Product: Mouse ($25.0)
-```
-
-### Example 8: Dart Frog - Basic API Endpoint
-
-For this example, you would typically create a Dart Frog project and then define an `index.dart` file in a `routes` directory.
-
-```dart
-import 'package:dart_frog/dart_frog.dart';
-
-Response onRequest(RequestContext context) {
-  return Response(body: 'Hello from Dart Frog!');
-}
-```
-
-**Output (when accessed via browser to /):**
-
-```
-Hello from Dart Frog!
-```
-
-### Example 9: Dart Frog - Dynamic Route with Parameter
-
-For this example, you would typically create a Dart Frog project and then define a `[name].dart` file in a `routes/api` directory.
-
-```dart
-import 'package:dart_frog/dart_frog.dart';
-
-Response onRequest(RequestContext context, String name) {
-  return Response(body: 'Hello, $name from Dart Frog!');
-}
-```
-
-**Output (when accessed via browser to /api/John):**
-
-```
-Hello, John from Dart Frog!
-```
-
-### Example 10: Dart Frog - Middleware
-
-For this example, you would typically create a Dart Frog project and then define a `_middleware.dart` file in the `routes` directory and an `index.dart` file.
-
-`routes/_middleware.dart`
-```dart
-import 'package:dart_frog/dart_frog.dart';
-
-Handler middleware(Handler handler) {
-  return (context) async {
-    // Intercept request
-    print('Incoming request: ${context.request.url}');
-
-    final response = await handler(context);
-
-    // Intercept response
-    print('Outgoing response: ${response.statusCode}');
-    return response;
-  };
-}
-```
-
-`routes/index.dart`
-```dart
-import 'package:dart_frog/dart_frog.dart';
-
-Response onRequest(RequestContext context) {
-  return Response(body: 'Hello from index!');
-}
-```
-
-**Output (when accessed via browser to /):**
-
-```
-Incoming request: http://localhost:8080/
-Outgoing response: 200
-Hello from index!
-```
-
----
-
-# Dart Interview Questions
-
-### Overview
-
-This section contains common Dart interview questions with detailed code examples and explanations. These questions cover fundamental concepts, advanced topics, and best practices that are frequently asked in Dart/Flutter developer interviews.
-
-1. Explain the difference between `var`, `final`, and `const` keywords in Dart.
-
-**Explanation:**
-- `var`: A flexible way to declare a variable without explicitly specifying its type. The type is inferred from the initial value and cannot be changed later. The value can be reassigned.
-- `final`: Declares a variable whose value can only be set once. Its value is determined at runtime and cannot be changed after initialization.
-- `const`: Declares a compile-time constant. The value must be known at compile time and cannot be changed. `const` variables are implicitly `final`.
-
-```dart
-void main() {
-  var name = 'Alice';
-  name = 'Bob'; // OK, can be reassigned
-  print('var name: $name');
-
-  final country = 'USA';
-  // country = 'Canada'; // Error: 'country', a final variable, can only be set once.
-  print('final country: $country');
-
-  const PI = 3.14159;
-  // PI = 3.0; // Error: 'PI', a constant variable, can't be assigned a value.
-  print('const PI: $PI');
-}
-```
-**Output:**
-```
-var name: Bob
-final country: USA
-const PI: 3.14159
-```
-
-### 2. What is Null Safety in Dart and why is it important?
-
-**Explanation:** Null Safety is a feature introduced in Dart 2.12 that helps prevent `null` reference errors (also known as "billion-dollar mistakes"). By default, all variables in Dart are non-nullable, meaning they cannot hold a `null` value unless explicitly declared as nullable using `?`. This allows developers to catch potential `null` errors at compile-time instead of runtime, leading to more robust and predictable applications.
-
-```dart
-void main() {
-  String name = 'Alice';
-  // String name2 = null; // Compile-time error
-
-  String? nullableName = null; // Explicitly nullable
-  print('Name: $name');
-  print('Nullable Name: $nullableName');
-
-  // Accessing properties of nullableName requires a null check
-  if (nullableName != null) {
-    print('Length: ${nullableName.length}');
-  } else {
-    print('Nullable name is null.');
-  }
-}
-```
-**Output:**
-```
-Name: Alice
-Nullable Name: null
-Nullable name is null.
-```
-
-### 3. Explain `async`, `await`, and `Future` in Dart.
-
-**Explanation:** Dart is single-threaded, but it handles asynchronous operations using `Future` objects, `async` and `await` keywords.
-- `Future`: Represents a potential value or error that will be available at some time in the future.
-- `async`: Marks a function as asynchronous, meaning it can perform long-running operations without blocking the main thread. An `async` function always returns a `Future`.
-- `await`: Can only be used inside an `async` function. It pauses the execution of the `async` function until the `Future` it's waiting on completes, and then resumes with the `Future`'s result.
-
-```dart
-Future<String> fetchUserOrder() {
-  // Simulate a network request
-  return Future.delayed(Duration(seconds: 3), () => 'Large Pizza');
+  return Response.ok('Hello, $name! Your User-Agent is: $userAgent');
 }
 
 void main() async {
-  print('Fetching user order...');
-  var order = await fetchUserOrder();
-  print('User order: $order');
+  final _router = Router()
+    ..get('/info', _infoHandler);
+
+  final handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
+
+  final server = await io.serve(handler, 'localhost', 8085);
+  print('Serving at http://${server.address.host}:${server.port}');
 }
 ```
-**Output:**
+
+**Output (when accessed via browser/curl):**
+
 ```
-Fetching user order...
-// (After 3 seconds)
-User order: Large Pizza
-```
+# Access with query parameter:
+curl http://localhost:8085/info?name=Alice
 
-### 4. What are `mixin`s in Dart? Provide an example.
+# Output: Hello, Alice! Your User-Agent is: curl/x.xx.x
 
-**Explanation:** Mixins are a way of reusing code in multiple class hierarchies. They allow you to add properties and methods to a class without extending it. A class can use the `with` keyword to apply one or more mixins. Mixins promote code reuse and help avoid issues with multiple inheritance.
+# Access without query parameter:
+curl http://localhost:8085/info
 
-```dart
-mixin Logger {
-  void log(String message) {
-    print('[LOG] $message');
-  }
-}
+# Output: Hello, Guest! Your User-Agent is: curl/x.xx.x
 
-class UserService with Logger {
-  void createUser(String name) {
-    log('Creating user: $name');
-    // ... user creation logic ...
-  }
-}
+# Access with custom User-Agent header:
+curl -H "User-Agent: MyCustomBrowser" http://localhost:8085/info
 
-class PaymentService with Logger {
-  void processPayment(double amount) {
-    log('Processing payment of \$$amount');
-    // ... payment processing logic ...
-  }
-}
-
-void main() {
-  var userService = UserService();
-  userService.createUser('John Doe');
-
-  var paymentService = PaymentService();
-  paymentService.processPayment(99.99);
-}
-```
-**Output:**
-```
-[LOG] Creating user: John Doe
-[LOG] Processing payment of $99.99
-```
-
-### 5. Explain `factory` constructors in Dart.
-
-**Explanation:** A `factory` constructor in Dart is used when you don't want to create a new instance of the class every time. Instead, it can return an existing instance from a cache, or an instance of a subclass. `factory` constructors don't implicitly create a new instance; they allow you to control the instance creation process. They cannot access `this`.
-
-```dart
-class Logger {
-  static final Map<String, Logger> _cache = <String, Logger>{};
-  final String name;
-
-  factory Logger(String name) {
-    if (_cache.containsKey(name)) {
-      return _cache[name]!;
-    } else {
-      final logger = Logger._internal(name);
-      _cache[name] = logger;
-      return logger;
-    }
-  }
-
-  Logger._internal(this.name); // Private named constructor
-
-  void log(String message) {
-    print('[$name] $message');
-  }
-}
-
-void main() {
-  var logger1 = Logger('AppLogger');
-  logger1.log('First log message.');
-
-  var logger2 = Logger('AppLogger'); // Returns the same instance as logger1
-  logger2.log('Second log message.');
-
-  print(identical(logger1, logger2)); // Output: true
-}
-```
-**Output:**
-```
-[AppLogger] First log message.
-[AppLogger] Second log message.
-true
-```
-
-### 6. What is the difference between `Iterable` and `List` in Dart?
-
-**Explanation:**
-- `Iterable`: A collection of elements that can be accessed sequentially. It's lazy, meaning elements are generated as you iterate over them, which can be more memory-efficient for large collections. `Iterable` does not guarantee order or allow direct access by index.
-- `List`: A common type of `Iterable` that stores an ordered collection of elements. It allows elements to be accessed by index and guarantees the order of elements. `List` is eager, meaning all elements are stored in memory.
-
-```dart
-void main() {
-  List<int> numbersList = [1, 2, 3, 4, 5];
-  Iterable<int> numbersIterable = numbersList.where((n) => n % 2 == 0);
-
-  print('List: $numbersList');
-  print('Iterable (even numbers): $numbersIterable');
-
-  // Accessing elements by index is direct for List
-  print('First element of List: ${numbersList[0]}');
-
-  // For Iterable, you might convert to a List or iterate
-  print('First element of Iterable: ${numbersIterable.first}');
-}
-```
-**Output:**
-```
-List: [1, 2, 3, 4, 5]
-Iterable (even numbers): (2, 4)
-First element of List: 1
-First element of Iterable: 2
-```
-
-### 7. Describe the event loop and isolates in Dart.
-
-**Explanation:**
-- **Event Loop:** Dart runs on a single thread and uses an event loop to handle asynchronous operations. When an asynchronous operation (like a network request or file I/O) completes, its result is placed in the event queue. The event loop continuously checks the event queue and moves events to the call stack for execution once the call stack is empty. This prevents blocking the main thread and keeps the UI responsive.
-- **Isolates:** While Dart is single-threaded, it can achieve concurrency using isolates. Isolates are independent workers that have their own memory heap and event loop. They do not share memory, communicating instead via message passing. This ensures that even if one isolate is busy, it doesn't block other isolates or the main UI thread. They are crucial for performing heavy computations without affecting UI performance.
-
-```dart
-import 'dart:isolate';
-
-void heavyComputation(SendPort sendPort) {
-  int sum = 0;
-  for (int i = 0; i < 1000000000; i++) {
-    sum += i;
-  }
-  sendPort.send(sum); // Send result back to main isolate
-}
-
-void main() async {
-  print('Main thread: Starting heavy computation in an isolate...');
-
-  ReceivePort receivePort = ReceivePort();
-  await Isolate.spawn(heavyComputation, receivePort.sendPort);
-
-  receivePort.listen((message) {
-    print('Main thread: Received result from isolate: $message');
-    receivePort.close();
-  });
-
-  print('Main thread: Continuing operations while isolate is busy...');
-}
-```
-**Output:**
-```
-Main thread: Starting heavy computation in an isolate...
-Main thread: Continuing operations while isolate is busy...
-Main thread: Received result from isolate: 499999999500000000 // (After some delay)
-```
-
-### 8. What are `extension` methods in Dart? How are they useful?
-
-**Explanation:** Extension methods allow you to add new functionality to existing classes without modifying the original class source code. They are useful for adding utility methods to classes you don't own (like `String` or `List` from Dart's core library) or to organize domain-specific logic. They improve code readability and maintainability.
-
-```dart
-extension StringExtensions on String {
-  String capitalize() {
-    return isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
-  }
-
-  String toTitleCase() {
-    return replaceAll(RegExp(' +'), ' ')\
-        .split(' ')\
-        .map((word) => word.capitalize())\
-        .join(' ');
-  }
-}
-
-void main() {
-  String message = 'hello world';
-  print(message.capitalize());
-
-  String title = 'this is a title example';
-  print(title.toTitleCase());
-}
-```
-**Output:**
-```
-Hello world
-This Is A Title Example
-```
-
-### 9. Explain the concept of `Stream`s in Dart.
-
-**Explanation:** A `Stream` in Dart is a sequence of asynchronous events. It's like an asynchronous `Iterable`—instead of getting all the values at once, a stream delivers them one by one over time. Streams are commonly used for handling events like user gestures, data from files, or network responses. They can be listened to, transformed, and combined.
-
-```dart
-Stream<int> countStream(int max) async* {
-  for (int i = 1; i <= max; i++) {
-    await Future.delayed(Duration(milliseconds: 500)); // Simulate delay
-    yield i;
-  }
-}
-
-void main() {
-  print('Starting stream...');
-  countStream(3).listen(
-    (number) {
-      print('Received: $number');
-    },
-    onDone: () {
-      print('Stream finished.');
-    },
-    onError: (error) {
-      print('Stream error: $error');
-    },
-  );
-  print('Program continues while stream is active.');
-}
-```
-**Output:**
-```
-Starting stream...
-Program continues while stream is active.
-Received: 1 (after 500ms)
-Received: 2 (after 1000ms)
-Received: 3 (after 1500ms)
-Stream finished. (after 1500ms)
-```
-
----
-Question 10: Explain Error Handling in Dart
-
-**Explanation:** Dart provides robust error handling mechanisms using `try-catch`, `on`, `finally`, and custom exceptions.
-- `try`: Encloses code that might throw an exception.
-- `catch`: Catches exceptions. Can specify `on` to catch specific exception types.
-- `finally`: Executes code regardless of whether an exception was thrown or caught.
-- `rethrow`: Allows an exception to be re-thrown after being caught, enabling multiple handlers to process it.
-- `Exception` vs. `Error`: `Exception`s are intended to be caught and handled, while `Error`s represent programming mistakes and usually should not be caught.
-
-```dart
-// Custom exception
-class ValidationException implements Exception {
-  final String message;
-  ValidationException(this.message);
-
-  @override
-  String toString() => 'ValidationException: $message';
-}
-
-// Error handling example
-void validateAge(int age) {
-  if (age < 0) {
-    throw ValidationException('Age cannot be negative');
-  }
-  if (age > 150) {
-    throw ValidationException('Age seems unrealistic');
-  }
-}
-
-Future<String> fetchData() async {
-  await Future.delayed(Duration(seconds: 1));
-  throw Exception('Network error');
-}
-
-void main() {
-  // Try-catch-on-finally
-  try {
-    validateAge(-5);
-  } on ValidationException catch (e) {
-    print('Caught specific exception: $e');
-  } catch (e) {
-    print('Caught generic exception: $e');
-  } finally {
-    print('Finally block always executed.');
-  }
-
-  print('\n--- Async Error Handling ---');
-  // Async error handling with .catchError
-  fetchData().then((value) {
-    print('Success: $value');
-  }).catchError((error) {
-    print('Error in Future: $error');
-  });
-
-  // Async error handling with try-catch
-  void handleAsyncError() async {
-    try {
-      await fetchData();
-    } catch (e) {
-      print('Caught async error with try-catch: $e');
-    }
-  }
-  handleAsyncError();
-
-  print('\n--- Rethrow Example ---');
-  // Rethrow example
-  try {
-    try {
-      validateAge(200);
-    } catch (e) {
-      print('Inner catch: $e');
-      rethrow; // Re-throw the caught exception
-    }
-  } catch (e) {
-    print('Outer catch: $e');
-  }
-}
-```
-**Output:**
-```
-Caught specific exception: ValidationException: Age cannot be negative
-Finally block always executed.
-
---- Async Error Handling ---
-Error in Future: Exception: Network error
-Caught async error with try-catch: Exception: Network error
-
---- Rethrow Example ---
-Inner catch: ValidationException: Age seems unrealistic
-Outer catch: ValidationException: Age seems unrealistic
+# Output: Hello, Guest! Your User-Agent is: MyCustomBrowser
 ```
