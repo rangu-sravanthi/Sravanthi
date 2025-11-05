@@ -2567,32 +2567,267 @@ void main() {
 **Output:**
 
 ```
+User: Alice (alice@example.com)
+User: Bob (bob@example.com)
+```
+
+### Example 6: Using Aqueduct for a more robust backend
+
+For this example, you would typically add `aqueduct` to your `pubspec.yaml` dependencies:
+
+```yaml
+dependencies:
+  aqueduct: ^4.0.0 # For HTTP server
+  sqlite3: ^2.1.0 # For database
+```
+
+Then run `dart pub get`.
+
+```dart
+import 'package:aqueduct/aqueduct.dart';
+import 'dart:convert';
+import 'package:sqlite3/sqlite3.dart';
+
+class _MyAppChannel extends ApplicationChannel {
+  final Database db;
+
+  _MyAppChannel(this.db);
+
+  @override
+  Future<void> prepare() async {
+    logger.onRecord.listen((record) => print(record.message));
+
+    db.execute('''
+      CREATE TABLE users (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE
+      );
+    ''');
+    db.execute(
+        'INSERT INTO users (name, email) VALUES (?, ?);', ['Alice', 'alice@example.com']);
+    db.execute(
+        'INSERT INTO users (name, email) VALUES (?, ?);', ['Bob', 'bob@example.com']);
+
+    final router = Router();
+    router.route('/api/users').link(() => UsersController(db));
+    router.route('/api/posts').link(() => PostsController(db));
+
+    return;
+  }
+
+  @override
+  Controller get entryPoint {
+    final router = Router();
+
+    router.route('/api/users').link(() => UsersController(db));
+    router.route('/api/posts').link(() => PostsController(db));
+
+    return router;
+  }
+}
+
+class UsersController extends ResourceController {
+  final Database db;
+
+  UsersController(this.db);
+
+  @Operation.get()
+  Future<Response> getUsers() async {
+    final ResultSet resultSet = db.select('SELECT * FROM users;');
+    final List<Map<String, dynamic>> users = resultSet.map((row) => row.toMap()).toList();
+    return Response.ok(jsonEncode(users));
+  }
+
+  @Operation.post()
+  Future<Response> createUser(@Bind.body() Map<String, dynamic> user) async {
+    await db.execute(
+        'INSERT INTO users (name, email) VALUES (?, ?);', [user['name'], user['email']]);
+    final ResultSet resultSet = db.select('SELECT * FROM users WHERE email = ?;', [user['email']]);
+    final Map<String, dynamic> createdUser = resultSet.first.toMap();
+    return Response.ok(jsonEncode(createdUser));
+  }
+}
+
+class PostsController extends ResourceController {
+  final Database db;
+
+  PostsController(this.db);
+
+  @Operation.get()
+  Future<Response> getPosts() async {
+    final ResultSet resultSet = db.select('SELECT * FROM posts;');
+    final List<Map<String, dynamic>> posts = resultSet.map((row) => row.toMap()).toList();
+    return Response.ok(jsonEncode(posts));
+  }
+
+  @Operation.post()
+  Future<Response> createPost(@Bind.body() Map<String, dynamic> post) async {
+    await db.execute(
+        'INSERT INTO posts (title, content) VALUES (?, ?);', [post['title'], post['content']]);
+    final ResultSet resultSet = db.select('SELECT * FROM posts WHERE title = ?;', [post['title']]);
+    final Map<String, dynamic> createdPost = resultSet.first.toMap();
+    return Response.ok(jsonEncode(createdPost));
+  }
+}
+
+void main() async {
+  final db = sqlite3.openInMemory();
+  final app = Application<_MyAppChannel>(ApplicationConfiguration())
+    ..options.port = 8084;
+
+  await app.start(numberOfInstances: 1, constructor: () => _MyAppChannel(db));
+  print('Aqueduct server running on port ${app.options.port}');
+}
+```
+
+**Output:**
+
+```
+Aqueduct server running on port 8084
+```
+
+### Example 7: Database Interaction (PostgreSQL with `postgres`)
+
+For this example, you would typically add `postgres` to your `pubspec.yaml` dependencies:
+
+```yaml
+dependencies:
+  postgres: ^2.5.0
+```
+
+Then run `dart pub get`.
+
+```dart
+import 'package:postgres/postgres.dart';
+
+void main() async {
+  final connection = PostgreSQLConnection(
+    'localhost',
+    5432,
+    'mydatabase',
+    username: 'myuser',
+    password: 'mypassword',
+  );
+
+  await connection.open();
+
+  await connection.query('''
+    CREATE TABLE IF NOT EXISTS products (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      price DOUBLE PRECISION NOT NULL
+    );
+  ''');
+
+  await connection.query(
+      'INSERT INTO products (name, price) VALUES (@name, @price);',
+      substitutionValues: {'name': 'Laptop', 'price': 1200.0});
+  await connection.query(
+      'INSERT INTO products (name, price) VALUES (@name, @price);',
+      substitutionValues: {'name': 'Mouse', 'price': 25.0});
+
+  final results = await connection.query('SELECT * FROM products;');
+
+  for (final row in results) {
+    print('Product: ${row[1]} (\$${row[2]})');
+  }
+
+  await connection.close();
+}
+```
+
+**Output:**
+
+```
+Product: Laptop ($1200.0)
+Product: Mouse ($25.0)
+```
+
+### Example 8: Dart Frog - Basic API Endpoint
+
+For this example, you would typically create a Dart Frog project and then define an `index.dart` file in a `routes` directory.
+
+```dart
+import 'package:dart_frog/dart_frog.dart';
+
+Response onRequest(RequestContext context) {
+  return Response(body: 'Hello from Dart Frog!');
+}
+```
+
+**Output (when accessed via browser to /):**
+
+```
+Hello from Dart Frog!
+```
+
+### Example 9: Dart Frog - Dynamic Route with Parameter
+
+For this example, you would typically create a Dart Frog project and then define a `[name].dart` file in a `routes/api` directory.
+
+```dart
+import 'package:dart_frog/dart_frog.dart';
+
+Response onRequest(RequestContext context, String name) {
+  return Response(body: 'Hello, $name from Dart Frog!');
+}
+```
+
+**Output (when accessed via browser to /api/John):**
+
+```
+Hello, John from Dart Frog!
+```
+
+### Example 10: Dart Frog - Middleware
+
+For this example, you would typically create a Dart Frog project and then define a `_middleware.dart` file in the `routes` directory and an `index.dart` file.
+
+`routes/_middleware.dart`
+```dart
+import 'package:dart_frog/dart_frog.dart';
+
+Handler middleware(Handler handler) {
+  return (context) async {
+    // Intercept request
+    print('Incoming request: ${context.request.url}');
+
+    final response = await handler(context);
+
+    // Intercept response
+    print('Outgoing response: ${response.statusCode}');
+    return response;
+  };
+}
+```
+
+`routes/index.dart`
+```dart
+import 'package:dart_frog/dart_frog.dart';
+
+Response onRequest(RequestContext context) {
+  return Response(body: 'Hello from index!');
+}
+```
+
+**Output (when accessed via browser to /):**
+
+```
+Incoming request: http://localhost:8080/
+Outgoing response: 200
+Hello from index!
+```
+
+---
+
 # Dart Interview Questions
 
 ### Overview
 
 This section contains common Dart interview questions with detailed code examples and explanations. These questions cover fundamental concepts, advanced topics, and best practices that are frequently asked in Dart/Flutter developer interviews.
 
-### 1. What is Dart and why is it used?
-
-**Explanation:** Dart is a client-optimized programming language developed by Google, primarily known for building fast apps on any platform (web, mobile, desktop). Its key features include a strong type system, a powerful VM for fast development cycles, and efficient compilation to native code for production. It's the language behind Flutter, Google's UI toolkit for building natively compiled applications from a single codebase.
-
-```dart
-// Dart is often used for:
-// 1. Mobile Apps (with Flutter)
-// 2. Web Apps (with Flutter web or AngularDart)
-// 3. Desktop Apps (with Flutter desktop)
-// 4. Backend (with frameworks like Shelf)
-void main() {
-  print('Dart is versatile and client-optimized!');
-}
-```
-**Output:**
-```
-Dart is versatile and client-optimized!
-```
-
-### 2. Explain the difference between `var`, `final`, and `const` keywords in Dart.
+1. Explain the difference between `var`, `final`, and `const` keywords in Dart.
 
 **Explanation:**
 - `var`: A flexible way to declare a variable without explicitly specifying its type. The type is inferred from the initial value and cannot be changed later. The value can be reassigned.
@@ -2621,7 +2856,7 @@ final country: USA
 const PI: 3.14159
 ```
 
-### 3. What is Null Safety in Dart and why is it important?
+### 2. What is Null Safety in Dart and why is it important?
 
 **Explanation:** Null Safety is a feature introduced in Dart 2.12 that helps prevent `null` reference errors (also known as "billion-dollar mistakes"). By default, all variables in Dart are non-nullable, meaning they cannot hold a `null` value unless explicitly declared as nullable using `?`. This allows developers to catch potential `null` errors at compile-time instead of runtime, leading to more robust and predictable applications.
 
@@ -2649,7 +2884,7 @@ Nullable Name: null
 Nullable name is null.
 ```
 
-### 4. Explain `async`, `await`, and `Future` in Dart.
+### 3. Explain `async`, `await`, and `Future` in Dart.
 
 **Explanation:** Dart is single-threaded, but it handles asynchronous operations using `Future` objects, `async` and `await` keywords.
 - `Future`: Represents a potential value or error that will be available at some time in the future.
@@ -2675,7 +2910,7 @@ Fetching user order...
 User order: Large Pizza
 ```
 
-### 5. What are `mixin`s in Dart? Provide an example.
+### 4. What are `mixin`s in Dart? Provide an example.
 
 **Explanation:** Mixins are a way of reusing code in multiple class hierarchies. They allow you to add properties and methods to a class without extending it. A class can use the `with` keyword to apply one or more mixins. Mixins promote code reuse and help avoid issues with multiple inheritance.
 
@@ -2714,7 +2949,7 @@ void main() {
 [LOG] Processing payment of $99.99
 ```
 
-### 6. Explain `factory` constructors in Dart.
+### 5. Explain `factory` constructors in Dart.
 
 **Explanation:** A `factory` constructor in Dart is used when you don't want to create a new instance of the class every time. Instead, it can return an existing instance from a cache, or an instance of a subclass. `factory` constructors don't implicitly create a new instance; they allow you to control the instance creation process. They cannot access `this`.
 
@@ -2757,7 +2992,7 @@ void main() {
 true
 ```
 
-### 7. What is the difference between `Iterable` and `List` in Dart?
+### 6. What is the difference between `Iterable` and `List` in Dart?
 
 **Explanation:**
 - `Iterable`: A collection of elements that can be accessed sequentially. It's lazy, meaning elements are generated as you iterate over them, which can be more memory-efficient for large collections. `Iterable` does not guarantee order or allow direct access by index.
@@ -2786,7 +3021,7 @@ First element of List: 1
 First element of Iterable: 2
 ```
 
-### 8. Describe the event loop and isolates in Dart.
+### 7. Describe the event loop and isolates in Dart.
 
 **Explanation:**
 - **Event Loop:** Dart runs on a single thread and uses an event loop to handle asynchronous operations. When an asynchronous operation (like a network request or file I/O) completes, its result is placed in the event queue. The event loop continuously checks the event queue and moves events to the call stack for execution once the call stack is empty. This prevents blocking the main thread and keeps the UI responsive.
@@ -2824,7 +3059,7 @@ Main thread: Continuing operations while isolate is busy...
 Main thread: Received result from isolate: 499999999500000000 // (After some delay)
 ```
 
-### 9. What are `extension` methods in Dart? How are they useful?
+### 8. What are `extension` methods in Dart? How are they useful?
 
 **Explanation:** Extension methods allow you to add new functionality to existing classes without modifying the original class source code. They are useful for adding utility methods to classes you don't own (like `String` or `List` from Dart's core library) or to organize domain-specific logic. They improve code readability and maintainability.
 
@@ -2856,7 +3091,7 @@ Hello world
 This Is A Title Example
 ```
 
-### 10. Explain the concept of `Stream`s in Dart.
+### 9. Explain the concept of `Stream`s in Dart.
 
 **Explanation:** A `Stream` in Dart is a sequence of asynchronous events. It's like an asynchronous `Iterable`—instead of getting all the values at once, a stream delivers them one by one over time. Streams are commonly used for handling events like user gestures, data from files, or network responses. They can be listened to, transformed, and combined.
 
@@ -2895,3 +3130,94 @@ Stream finished. (after 1500ms)
 ```
 
 ---
+Question 10: Explain Error Handling in Dart
+
+**Explanation:** Dart provides robust error handling mechanisms using `try-catch`, `on`, `finally`, and custom exceptions.
+- `try`: Encloses code that might throw an exception.
+- `catch`: Catches exceptions. Can specify `on` to catch specific exception types.
+- `finally`: Executes code regardless of whether an exception was thrown or caught.
+- `rethrow`: Allows an exception to be re-thrown after being caught, enabling multiple handlers to process it.
+- `Exception` vs. `Error`: `Exception`s are intended to be caught and handled, while `Error`s represent programming mistakes and usually should not be caught.
+
+```dart
+// Custom exception
+class ValidationException implements Exception {
+  final String message;
+  ValidationException(this.message);
+
+  @override
+  String toString() => 'ValidationException: $message';
+}
+
+// Error handling example
+void validateAge(int age) {
+  if (age < 0) {
+    throw ValidationException('Age cannot be negative');
+  }
+  if (age > 150) {
+    throw ValidationException('Age seems unrealistic');
+  }
+}
+
+Future<String> fetchData() async {
+  await Future.delayed(Duration(seconds: 1));
+  throw Exception('Network error');
+}
+
+void main() {
+  // Try-catch-on-finally
+  try {
+    validateAge(-5);
+  } on ValidationException catch (e) {
+    print('Caught specific exception: $e');
+  } catch (e) {
+    print('Caught generic exception: $e');
+  } finally {
+    print('Finally block always executed.');
+  }
+
+  print('\n--- Async Error Handling ---');
+  // Async error handling with .catchError
+  fetchData().then((value) {
+    print('Success: $value');
+  }).catchError((error) {
+    print('Error in Future: $error');
+  });
+
+  // Async error handling with try-catch
+  void handleAsyncError() async {
+    try {
+      await fetchData();
+    } catch (e) {
+      print('Caught async error with try-catch: $e');
+    }
+  }
+  handleAsyncError();
+
+  print('\n--- Rethrow Example ---');
+  // Rethrow example
+  try {
+    try {
+      validateAge(200);
+    } catch (e) {
+      print('Inner catch: $e');
+      rethrow; // Re-throw the caught exception
+    }
+  } catch (e) {
+    print('Outer catch: $e');
+  }
+}
+```
+**Output:**
+```
+Caught specific exception: ValidationException: Age cannot be negative
+Finally block always executed.
+
+--- Async Error Handling ---
+Error in Future: Exception: Network error
+Caught async error with try-catch: Exception: Network error
+
+--- Rethrow Example ---
+Inner catch: ValidationException: Age seems unrealistic
+Outer catch: ValidationException: Age seems unrealistic
+```
